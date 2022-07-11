@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+    font-family: Roboto, monospace;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}

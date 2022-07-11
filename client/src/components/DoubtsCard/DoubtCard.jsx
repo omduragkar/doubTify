@@ -4,7 +4,7 @@ import CommentCard from './CommentCard'
 
 const DoubtCard = () => {
   return (
-    <div className='w-full bg-slate-200 p-5 rounded-sm shadow-md border-slate-400 border-2'>
+    <div className='w-full bg-slate-200 p-2 sm:p-5 rounded-sm shadow-md border-slate-400 border-2'>
         <div className='flex flex-col md:flex-row'>
           <div className='flex-1'>
             <Typography variant={"h5"}>How do rain happen?</Typography>

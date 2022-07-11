@@ -16,8 +16,7 @@ const Auth = ({isLogin}) => {
     
     const history = useNavigate();
   return (
-    <div className='w-screen h-screen bg-slate-900 text-black flex justify-center items-center'>
-
+    <div className='my-14 md:my-0 w-screen h-screen bg-slate-900 text-black flex justify-center items-center'>
         <div className='bg-slate-200 w-11/12 xl:w-1/2 md:w-3/4 rounded-md shadow-lg'>
             <Tabs
                 value={value}

@@ -52,6 +52,7 @@ const SingleDoubts = () => {
             dispatch(answerComplete(answerObj))
             
           }}
+          disabled={doubts.loading}
           >Answer</Button>
         </div>
       </div>

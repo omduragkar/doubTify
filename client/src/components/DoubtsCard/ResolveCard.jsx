@@ -5,6 +5,7 @@ import { assignDoubt } from '../../redux/actions/doubtAction'
 import { useDispatch, useSelector } from 'react-redux'
 const ResolveCard = ({doubt}) => {
   const token = useSelector(state=>state.userInfo.token);
+  const tas = useSelector(state=>state.tas);
   const dispatch = useDispatch();
   return (
     <div className='w-full bg-slate-200 p-3 md:pr-16 rounded-sm shadow-md border-slate-400 border-2'>
@@ -18,6 +19,7 @@ const ResolveCard = ({doubt}) => {
               console.log(doubt._id)
               dispatch(assignDoubt({id:doubt._id, token}))
             }}
+            disabled={tas.loading}
             >Accept</Button>
           </div>
         </div>

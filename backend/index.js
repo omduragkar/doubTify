@@ -15,11 +15,14 @@ app.use('/api/doubts', doubtRoutes);
 
 // app.use('/api/ticket', ticketRoutes);
 
-const port=  process.env.port || 2400;
+app.get("/", function(req, res){
+    res.send("Hello World! App started!")
+})
+const port=  process.env.PORT || 3000;
 app.use("/", function(req, res){
     
     res.status(404).json({
-        "message":`No routes with url http://localhost:5000${req.url} exists!`,
+        "message":`No routes with url https://backendfordoubtify.herokuapp.com/${req.url} exists!`,
         "request":"Sorry"
     })
 })

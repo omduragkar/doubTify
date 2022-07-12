@@ -20,7 +20,9 @@ const Nav = () => {
             </div>
             <div className="hidden sm:block">
                 <ul className='flex gap-5 items-center'>
-                    <li className='cursor-pointer'>Home</li>
+                    <li className='cursor-pointer' onClick={()=>{
+                        history("/")
+                    }}>Home</li>
                     <li>
                         
                         <Button variant={"text"} onClick={()=>{
@@ -37,12 +39,16 @@ const Nav = () => {
                             Signup
                         </Button>
                     </li>
-                    <li className='cursor-pointer'>About</li>
+                    <li className='cursor-pointer' onClick={()=>{
+                        history("/about")
+                    }}>About</li>
                 </ul>
             </div>
             <div>
                 <ul id="smNav" className='flex flex-col fixed left-0 top-0 py-5 hideblock bg-slate-800 w-full gap-5 items-center'>
-                    <li className='cursor-pointer'>Home</li>
+                    <li className='cursor-pointer' onClick={()=>{
+                        history("/")
+                    }}>Home</li>
                     <li>
                         
                         <Button variant={"text"} onClick={()=>{
@@ -59,7 +65,9 @@ const Nav = () => {
                             Signup
                         </Button>
                     </li>
-                    <li className='cursor-pointer'>About</li>
+                    <li className='cursor-pointer' onClick={()=>{
+                        history("/about")
+                    }}>About</li>
             </ul>
             </div>
             <div className='sm:hidden'>

@@ -3,7 +3,9 @@ import {TextField,Typography, Button, Alert, AlertTitle} from "@mui/material"
 import { useDispatch, useSelector } from 'react-redux';
 import { raiseDoubt } from '../redux/actions/doubtAction';
 import { useEffect } from 'react';
-
+import { useNavigate } from "react-router-dom"
+import { updateTAMessage } from '../redux/reducers/taReducers';
+import { updateMessage } from '../redux/reducers/doubtReducers';
 
 
 const RaiseDoubt = () => {
@@ -15,7 +17,18 @@ const RaiseDoubt = () => {
   const submit=()=>{
     console.log({...data, token: userFetch.token})
     dispatch(raiseDoubt({...data, token: userFetch.token}))
+
   }
+  useEffect(()=>{
+    dispatch(updateTAMessage({
+      message:"",
+      status: ""
+    }))
+    dispatch(updateMessage({
+      message:"",
+      status: ""
+    }))
+  },[])
   useEffect(() => {
     if(doubts.status == 200){
       setData({});

@@ -1,5 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Nav from "./components/Nav"
+import About from "./pages/About"
 import Auth from "./pages/Auth"
 import Dashboard from "./pages/Dashboard"
 import Home from "./pages/Home"
@@ -14,6 +15,7 @@ export default function App() {
                 <Routes>
                 <Route path="/">
                     <Route index element={<Home />} />
+                    <Route path="about" element={<About/>}/>
                     <Route path="auth">
                         <Route path="signup" element={<Auth isLogin={false}/>} />
                         <Route path="login" element={<Auth isLogin={true}/>} />

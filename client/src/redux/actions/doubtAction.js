@@ -9,7 +9,7 @@ export const raiseDoubt = (doubtData)=>{
         try{
 
             let apicallfordoubts = await axios.post(
-                "http://localhost:5000/api/doubts/raisedoubt",
+                "https://backendfordoubtify.herokuapp.com/api/doubts/raisedoubt",
                 {
                     ...doubtData
                 },
@@ -43,7 +43,7 @@ export const getAllDoubt = (token)=>{
             console.log(token)
 
             let apicallfordoubts = await axios.get(
-                "http://localhost:5000/api/doubts/alldoubts",
+                "https://backendfordoubtify.herokuapp.com/api/doubts/alldoubts",
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export const getPendingDoubts = (token)=>{
             console.log(token)
 
             let apicallfordoubts = await axios.get(
-                "http://localhost:5000/api/doubts/pendingDoubts",
+                "https://backendfordoubtify.herokuapp.com/api/doubts/pendingDoubts",
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const assignDoubt = ({token, id})=>{
         try{
 
             let apicallfordoubts = await axios.post(
-                `http://localhost:5000/api/doubts/assigningDoubt`,
+                `https://backendfordoubtify.herokuapp.com/api/doubts/assigningDoubt`,
                 {
                     id
                 },
@@ -143,7 +143,7 @@ export const getDoubtsById = (id)=>{
         try{
 
             let apicallfordoubts = await axios.get(
-                `http://localhost:5000/api/doubts/${id}`,
+                `https://backendfordoubtify.herokuapp.com/api/doubts/${id}`,
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -176,7 +176,7 @@ export const answerComplete = (dataBody)=>{
         try{
 
             let apicallfordoubts = await axios.post(
-                `http://localhost:5000/api/doubts/answeringDoubt`,
+                `https://backendfordoubtify.herokuapp.com/api/doubts/answeringDoubt`,
                 {
                     ...dataBody
                 },
@@ -210,7 +210,7 @@ export const addComment = (commentBody)=>{
         try{
 
             let apicallfordoubts = await axios.post(
-                `http://localhost:5000/api/doubts/addComment`,
+                `https://backendfordoubtify.herokuapp.com/api/doubts/addComment`,
                 {
                     ...commentBody
                 },

@@ -2,10 +2,12 @@ import { Button, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { useState } from 'react'
 import CommentCard from './CommentCard'
+
 import { useDispatch, useSelector } from "react-redux"
 import { addComment } from "../../redux/actions/doubtAction"
 const DoubtCard = ({doubtData}) => {
   const token = useSelector(state=>state.userInfo.token);
+  const tA = useSelector(state=>state.tas);
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
   return (
@@ -46,17 +48,24 @@ const DoubtCard = ({doubtData}) => {
           </div>
           <div className='flex flex-col md:flex-row justify-center items-center'>
             <TextField className='flex-1' onChange={e=>setComment(e.target.value)} value={comment}/>
+            
             <Button
             onClick={()=>{
-              let commentObj={
-                comment,
-                id:doubtData._id,
-                token
+              if(comment){
+                let commentObj={
+                  comment,
+                  id:doubtData._id,
+                  token
+                }
+                dispatch(addComment(commentObj))
+                setComment("")
+              }else{
+                alert("Write something in comment!")
               }
-              dispatch(addComment(commentObj))
-              setComment("")
             }}
-            >Comment</Button>
+            disabled={tA.loading}
+            >Comment
+            </Button>
           </div>
         </div>
     </div>

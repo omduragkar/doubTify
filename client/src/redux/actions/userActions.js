@@ -8,7 +8,7 @@ export const userLogin = ({email, password})=>{
         }))
         
         try{
-            let apicallforUser = await axios.post("http://localhost:5000/api/user/login", {email, password},{
+            let apicallforUser = await axios.post("https://backendfordoubtify.herokuapp.com/api/user/login", {email, password},{
                 headers: {'Content-Type': 'application/json'}
             })
             // console.log()
@@ -38,7 +38,7 @@ export const createUser = (userData)=>{
         }))
         
         try{
-            let apicallforUser = await axios.post("http://localhost:5000/api/user/createlocal", userData,{
+            let apicallforUser = await axios.post("https://backendfordoubtify.herokuapp.com/api/user/createlocal", userData,{
                 headers: {'Content-Type': 'application/json'}
             })
             

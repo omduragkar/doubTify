@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -26,14 +26,23 @@ const Dashboard = () => {
 
       </div>
       <Typography variant={"h4"}>Home</Typography>
-      <Typography variant={"p"} className={"w-full"} textAlign={"end"}>{doubts?.doubtArray?.length} Doubts</Typography>
-      <div className='my-5 flex flex-wrap flex-col gap-5'>
-        {
-          doubts?.doubtArray?.map(doubt=>(
-            <DoubtCard doubtData = {doubt}/>
-          ))
-        }
-      </div>
+      {
+        doubts.loading?
+        <div className='w-full h-screen flex justify-center items-center'>
+          <CircularProgress color="inherit" />
+        </div>
+        :
+        <>
+          <Typography variant={"p"} className={"w-full"} textAlign={"end"}>{doubts?.doubtArray?.length} Doubts</Typography>
+          <div className='my-5 flex flex-wrap flex-col gap-5'>
+            {
+              doubts?.doubtArray?.map(doubt=>(
+                <DoubtCard doubtData = {doubt}/>
+                ))
+              }
+          </div>
+      </>
+      }
     </div>
   )
 }

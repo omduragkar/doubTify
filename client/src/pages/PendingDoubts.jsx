@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Button, Typography } from '@mui/material'
+import { Alert, AlertTitle, Button, CircularProgress, Typography } from '@mui/material'
 import React from 'react'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,13 +20,21 @@ const PendingDoubts = () => {
       history(`/assigned/${userData.pendingDoubt.id}`)
     }
     
-  },[userData.pendingDoubt])
+  },[userData.pendingDoubt, history])
   return (
+    
     <div className='py-16 p-2 md:p-16 bg-slate-100'>
       <Typography variant={"h4"} className={"py-5 md:py-8 md:px-2"}>
         Raised Doubt
       </Typography>
-      {console.log(userData.pendingDoubt.status)}
+     {
+
+      tas.loading?
+      <div className='w-full h-screen flex justify-center items-center'>
+        <CircularProgress color="inherit" />
+    </div>
+    :
+    <>
       {userData.pendingDoubt.status?
         <>
           <Alert><AlertTitle>Warning</AlertTitle> Doubt Already Assigned. Please Complete to Unlock!</Alert>
@@ -53,6 +61,9 @@ const PendingDoubts = () => {
           }
         </div>
       }
+    </>
+
+    }
 
     </div>
   )

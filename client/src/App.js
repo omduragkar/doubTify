@@ -25,6 +25,9 @@ export default function App() {
                         <Route index element={<PendingDoubts/>} />
                         <Route path=":doubtId" element={<SingleDoubts />} />
                     </Route>
+                    <Route path="assigned">
+                        <Route path=":doubtId" element={<SingleDoubts />} />
+                    </Route>
                 </Route>
                 </Routes>
             </BrowserRouter>

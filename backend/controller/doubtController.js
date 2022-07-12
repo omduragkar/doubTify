@@ -1,28 +1,34 @@
 const expressAsyncHandler = require("express-async-handler");
 const { isValidObjectId } = require("mongoose");
+const Answers = require("../models/Answer");
+const Comments = require("../models/Comments");
 const Doubts = require("../models/doubts");
+const User = require("../models/userModel");
 const clientmongo = require("mongodb").MongoClient;
 
 module.exports.raiseDoubt = expressAsyncHandler(async function(req, res){
     let re = req.body;
-    if(!re.doubt || !re.description){
+    if(!re.title || !re.description){
         res.status(401).json({
             "err":401,
             "message":"Complete all the fields!"
         });
     }else{
         let raisedDoubt = await Doubts.create({
-            doubt:re.doubt,
+            doubt:re.title,
             description:re.description,
             doubtBy:req.user._id,
         });
-        if(!raisedDoubt){``
+        if(!raisedDoubt){
             res.status(401).json({
                 "err":401,
                 "message":"Error in creating!"
             });
             
         }else{
+            let addtoUser = await User.findByIdAndUpdate(req.user._id, {
+                $push:{doubts:raisedDoubt._id}
+            })
             res.json({
                 "title":`Yay! Doubt with id: ${raisedDoubt._id} raised`,
                 "message":`Doubt with reference id: ${raisedDoubt._id} raised.`,
@@ -33,29 +39,11 @@ module.exports.raiseDoubt = expressAsyncHandler(async function(req, res){
     }
 })
 
-// module.exports.schema = expressAsyncHandler(async function(req, res){
-//     let status_options , contact_details, work_details ;
-//     clientmongo.connect(process.env.mongoURI, async function (err, db){
-//         if(err){
-//             res.status(400).json({
-//                 "message":"Connection error!"
-//             })
-//         }
-//         var dbo = db.db(process.env.db)
-//         status_options = await dbo.collection("ticket_status").find({}).toArray();
-//         contact_details = await dbo.collection("contact_details").find({}).toArray();
-//         work_details = await dbo.collection("work_details").find({}).toArray();
-//         res.json({
-//             status_options,
-//             work_details,
-//             contact_details
-//         })
-//     });
-// })
+
 
 module.exports.getDoubt = expressAsyncHandler(async function(req, res){
     let re = req.params.doutbtId;
-    console.log(re);
+    // console.log(re);
     if(!re){
         res.status(401).json({
             "err":401,
@@ -71,7 +59,14 @@ module.exports.getDoubt = expressAsyncHandler(async function(req, res){
     }
     else{
         
-        let doubtStatus = await Doubts.findById(re);
+        let doubtStatus = await Doubts.findById(re).populate("doubtBy", "name")
+        .populate({
+            path : 'comments',
+            populate : {
+              path : 'by',
+              select:{"name":1}
+            }
+          });
         if(!doubtStatus){
             res.status(401).json({
                 "err":401,
@@ -81,65 +76,182 @@ module.exports.getDoubt = expressAsyncHandler(async function(req, res){
         }else{
             res.json({
                 "message":`Doubt with id: ${doubtStatus._id}!`,
-                "ticket":doubtStatus,
+                "doubt":doubtStatus,
             })
         }
     }
 })
-// module.exports.get_ticket_by_status = expressAsyncHandler(async function(req, res){
-//     let re = req.body;
-//     if(!re.status){
-//         res.status(401).json({
-//             "err":401,
-//             "message":"please add tracking_id!"
-//         });
-//     }
-//     else{
-        
-//         let ticket_status = await Tickets.find({status:re.status}).sort({createdAt:-1});
-//         if(!ticket_status){
-//             res.status(401).json({
-//                 "err":401,
-//                 "message":"No Ticket currently exist!"
-//             });
-            
-//         }else{
-//             res.json({
-//                 "message":`success`,
-//                 "ticket":ticket_status,
-//             })
-//         }
-//     }
-// })
-// module.exports.change_status = expressAsyncHandler(async function(req, res){
-//     let re = req.body;
-//     if(!re.ticket_id || !re.ticket){
-//         res.status(401).json({
-//             "err":401,
-//             "message":"please add tracking_id"
-//         });
-//     }
-//     else if(!isValidObjectId(re.ticket_id)){
-//         res.status(401).json({
-//             "err":401,
-//             "message":"Wrong tracking_id!"
-//         });
 
-//     }
-//     else{
-//         let ticket_status = await Tickets.findByIdAndUpdate(re.ticket_id, re.ticket, {new:true});
-//         if(!ticket_status){
-//             res.status(401).json({
-//                 "err":401,
-//                 "message":"No Ticket with given input does Exists!"
-//             });
+
+module.exports.getAllDoubts = expressAsyncHandler(async function(req, res){
+
+           
+    let doubtStatus = await (await Doubts.find({})
+    .populate('doubtBy', "name").populate({
+        path : 'comments',
+        populate : {
+          path : 'by',
+          select:{"name":1}
+        }
+      })
+      .populate({
+        path : 'Answer',
+        populate : {
+          path : 'by',
+          select:{"name":1}
+        }
+      }))
+      .reverse();
+    if(!doubtStatus){
+        res.status(401).json({
+            "err":401,
+            "message":"No Doubt with given input does Exists!"
+        });
+        
+    }else{
+        res.json({
+            message:"success",
+            doubts:doubtStatus            
+        })
+    }
+    
+})
+
+
+module.exports.getPendingDoubts = expressAsyncHandler(async function(req, res){
+
+           
+    let doubtStatus = await Doubts.find({doubtStatus:"doubt_raised"}).populate('doubtBy', "name");
+    if(!doubtStatus){
+        res.status(401).json({
+            "err":401,
+            "message":"No Doubt with given input does Exists!"
+        });
+        
+    }else{
+        res.json({
+            message:"success",
+            doubts:doubtStatus            
+        })
+    }
+    
+})
+
+
+module.exports.answerTA = expressAsyncHandler(async function(req, res){
+    let re = req.body;
+    if(!re.answer){
+        res.status(401).json({
+            "err":401,
+            "message":"Please complete Answer!"
+        });
+    }else{
+        let answermade = await Answers.create({
+            Answer:re.answer,
+            onDoubt:re.doubtId,
+            by:req.user._id
+        })
+        let raisedDoubt = await Doubts.findByIdAndUpdate(re.doubtId,{
+            doubtStatus:"doubt_resolved",
+            Answer:answermade._id
+        },
+        {
+            new:true
+        });
+        if(!raisedDoubt){
+            res.status(401).json({
+                "err":401,
+                "message":"Error in finding!"
+            });
             
-//         }else{
-//             res.json({
-//                 "message":`Ticket with id: ${ticket_status._id} Updated!`,
-//                 "ticket":ticket_status,
-//                 "status":ticket_status.status
-//             })
-//         }
-//     }
-// })
+        }else{
+            let addtoUser = await User.findByIdAndUpdate(req.user._id, {
+                pendingDoubt:{
+                    id:undefined,
+                    status:false
+                }
+            }, {new:true})
+            res.json({
+                user:addtoUser,
+                raisedDoubt
+            })
+        }
+    }
+})
+module.exports.assignDoubttoTA = expressAsyncHandler(async function(req, res){
+    let re = req.body;
+    if(!re.id){
+        res.status(401).json({
+            "err":401,
+            "message":"Reclick"
+        });
+    }else{
+        let raisedDoubt = await Doubts.findByIdAndUpdate(re.id,{
+            doubtStatus:"doubt_assigned"
+        },
+        {
+            new:true
+        });
+        if(!raisedDoubt){
+            res.status(401).json({
+                "err":401,
+                "message":"Error in finding!"
+            });
+            
+        }else{
+            let addtoUser = await User.findByIdAndUpdate(req.user._id, {
+                pendingDoubt:{
+                    id:raisedDoubt._id,
+                    status:true
+                }
+            }, {new:true})
+            res.json({
+                user:addtoUser,
+                raisedDoubt
+            })
+        }
+    }
+})
+
+
+
+module.exports.addComment = expressAsyncHandler(async function(req, res){
+    let re = req.body;
+    if(!re.comment){
+        res.status(401).json({
+            "err":401,
+            "message":"comment Error"
+        });
+    }else{
+        let addCommenttoDoubt = await Comments.create({
+            comment:re.comment,
+            by:req.user._id,
+            onDoubt:re.id
+
+        })
+        let doubtwithComment = await Doubts.findByIdAndUpdate(re.id,{
+            $push:{comments:addCommenttoDoubt._id}
+        },
+        {
+            new:true
+        })
+        .populate('doubtBy', "name")
+        .populate({path:"comments",populate : {
+            path : 'by',
+            select:{"name":1}
+          }});
+        // console.log({doubtwithComment,addCommenttoDoubt })
+        if(!doubtwithComment){
+            res.status(401).json({
+                "err":401,
+                "message":"Doubt Closed or Not Available!"
+            });
+            
+        }else{
+            res.json({
+                comment:addCommenttoDoubt,
+                doubtwithComment
+            })
+        }
+    }
+})

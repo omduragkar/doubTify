@@ -21,16 +21,15 @@ const userSchema = mongoose.Schema({
         default:"user"
     },
     pendingDoubt:{
-        type:Object,
-        default:{
-            status:false,
-            id:""
-        }
+        id:{ type: mongoose.Schema.Types.ObjectId, ref: 'Doubts' },
+        status:Boolean
+
     },
     doubtsResolved:{
         type:String,
     },
     doubts:[
+        { type: mongoose.Schema.Types.ObjectId, ref: 'Doubts' }
     ]
 },{
     timestamps: true

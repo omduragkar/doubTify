@@ -46,12 +46,6 @@ module.exports.userCreate =  expressAsyncHandler(async (req, res)=>{
             "message":"Incoreect Password and Confirm Password"
         })
         
-    }else if(x.password.length <8){
-
-        res.status(400).json({
-            "message":"Password length must be greater than or equal to 8 charachters"
-        })
-
     }else{
         console.log({role:x.role == "user", r:x.role})
         const user = await User.findOne({email:x.email}); 
@@ -61,14 +55,14 @@ module.exports.userCreate =  expressAsyncHandler(async (req, res)=>{
                 name:x.name,
                 email: x.email,
                 password: x.password,
-                role:x.role == "user"?"user":"TA"
+                role:x.role || "user"
             });
             if(user){
                 
                 res.json({
                     name: user.name,
                     email: user.email,
-                    avatar: user.avatar,
+                    role:user.role,
                     token: "Bearer " + createToken(user._id),
                 });
             }else{
